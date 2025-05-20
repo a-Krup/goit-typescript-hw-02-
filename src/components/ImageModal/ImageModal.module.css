@@ -1,0 +1,88 @@
+.modalContent {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 16px;
+  padding: 10px;
+  background-color: #eef1f5;
+  position: relative;
+}
+
+.modalInfo {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: left;
+  color: #333;
+  padding: 0 8px;
+}
+
+.modalInfo h2 {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.author,
+.likes,
+.createdAt,
+.location {
+  font-size: 16px;
+  margin-bottom: 5px;
+}
+
+.location {
+  font-style: italic;
+}
+
+.buttonClose {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 50%;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #333;
+}
+
+.buttonClose:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+  transform: scale(1.1);
+}
+
+.buttonClose:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(100, 100, 255, 0.5);
+}
+
+@media (min-width: 768px) {
+  .modalContent {
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 24px;
+  }
+
+  .modalContent img {
+    height: 500px;
+    width: 450px;
+  }
+  .modalInfo {
+    width: 220px;
+  }
+}
+
+@media (min-width: 1025px) {
+  .modalContent {
+    justify-content: start;
+    gap: 48px;
+  }
+  .modalContent img {
+    width: 100%;
+    height: 550px;
+  }
+}
