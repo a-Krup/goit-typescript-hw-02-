@@ -9,14 +9,34 @@ import ImageModal from "./components/ImageModal/ImageModal";
 import { fetchImages } from "./services/api";
 import "./App.css";
 
-const App = () => {
-  const [images, setImages] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [query, setQuery] = useState("");
-  const [error, setError] = useState("");
-  const [page, setPage] = useState(1);
-  const [selectedImage, setSelectedImage] = useState(null);
-  const [totalPages, setTotalPages] = useState(0);
+type ImageType = {
+  id: string;
+  alt_description: string | null;
+  urls: {
+    small: string;
+    regular: string;
+  };
+  user: {
+    name: string;
+    links: {
+      html: string;
+    };
+  };
+  likes: number;
+  created_at: string;
+  location?: {
+    name?: string;
+  };
+};
+
+const App: React.FC = () => {
+  const [images, setImages] = useState<ImageType[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [query, setQuery] = useState<string>("");
+  const [error, setError] = useState<string>("");
+  const [page, setPage] = useState<number>(1);
+  const [selectedImage, setSelectedImage] = useState<ImageType | null>(null);
+  const [totalPages, setTotalPages] = useState<number>(0);
 
   const accessKey = "u1G_rZf1UiHkHYgpRPjToRSqezYhMCuh_LMjjlpGTZg";
 
@@ -26,6 +46,7 @@ const App = () => {
     const getImages = async () => {
       setLoading(true);
       setError("");
+
       try {
         const data = await fetchImages(query, page, accessKey);
         setImages((prev) =>
@@ -43,17 +64,18 @@ const App = () => {
     getImages();
   }, [query, page]);
 
-  const handleSearchSubmit = (searchQuery) => {
+  const handleSearchSubmit = (searchQuery: string): void => {
     if (searchQuery.trim() === "") {
       toast.error("Please enter the text to search for.");
       return;
     }
+
     setQuery(searchQuery);
     setPage(1);
     setImages([]);
   };
 
-  const handleLoadMore = () => {
+  const handleLoadMore = (): void => {
     setPage((prevPage) => prevPage + 1);
   };
 
@@ -62,15 +84,17 @@ const App = () => {
       <Toaster />
       <SearchBar onSubmit={handleSearchSubmit} />
 
-      {loading && <Loader size={50} color="#3498db" loading={loading} />}
-
       {error && <ErrorMessage message={error} />}
 
       <ImageGallery images={images} onImageClick={setSelectedImage} />
 
-      {images.length > 0 && !loading && page < totalPages && (
-        <LoadMoreBtn onClick={handleLoadMore} />
-      )}
+      {images.length > 0 &&
+        page < totalPages &&
+        (loading ? (
+          <Loader size={50} color="#3498db" loading={loading} />
+        ) : (
+          <LoadMoreBtn onClick={handleLoadMore} />
+        ))}
 
       {selectedImage && (
         <ImageModal

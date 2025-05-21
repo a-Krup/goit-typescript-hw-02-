@@ -1,19 +1,41 @@
 import React, { useEffect, useState } from "react";
 import Modal from "react-modal";
-import { FiX } from 'react-icons/fi';
+import { FiX } from "react-icons/fi";
 import styles from "./ImageModal.module.css";
 
-const ImageModal = ({ image, onClose }) => {
+type ImageType = {
+  id: string;
+  alt_description: string | null;
+  urls: {
+    small: string;
+    regular: string;
+  };
+  user: {
+    name: string;
+    links: {
+      html: string;
+    };
+  };
+  likes: number;
+  created_at: string;
+  location?: {
+    name?: string;
+  };
+};
+
+interface ImageModalProps {
+  image: ImageType;
+  onClose: () => void;
+}
+
+const ImageModal: React.FC<ImageModalProps> = ({ image, onClose }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
-    if (image) {
-      Modal.setAppElement("#root");
-      setIsModalOpen(true);
-    } else {
-      setIsModalOpen(false);
-    }
+    Modal.setAppElement("#root");
+    setIsModalOpen(!!image);
   }, [image]);
+
   if (!image) return null;
 
   const { alt_description, user, likes, created_at, location, urls } = image;
@@ -23,13 +45,11 @@ const ImageModal = ({ image, onClose }) => {
       isOpen={isModalOpen}
       onRequestClose={onClose}
       contentLabel="Image Modal"
-      appElement={document.getElementById("root")}
       shouldCloseOnOverlayClick={true}
       shouldCloseOnEsc={true}
     >
       <div className={styles.modalContent}>
         <img src={urls.regular} alt={alt_description || "Image"} />
-
         <div className={styles.modalInfo}>
           <h2>{alt_description || "No description available"}</h2>
           <p className={styles.author}>
@@ -42,18 +62,18 @@ const ImageModal = ({ image, onClose }) => {
           <p className={styles.createdAt}>
             Created at: {new Date(created_at).toLocaleDateString()}
           </p>
-          {location && (
-            <p className={styles.location}>
-              Location: {location.name || "Unknown"}
-            </p>
+          {location?.name && (
+            <p className={styles.location}>Location: {location.name}</p>
           )}
-        </div>       
-        <button className={styles.buttonClose} onClick={onClose} aria-label="Close modal">
-  <FiX size={18} />
-</button>
+        </div>
+        <button
+          className={styles.buttonClose}
+          onClick={onClose}
+          aria-label="Close modal"
+        >
+          <FiX size={18} />
+        </button>
       </div>
-     
-     
     </Modal>
   );
 };
